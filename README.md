@@ -2,6 +2,8 @@
 A tool for placing hanging orders stealthily in  IBKR
 This tool reads stock order data from a CSV file and places GTC trailing stop-limit orders with logic to protect against selling below your average buy price.
 
+Join the Bigshort.com Discord and ping Berkshire-RSI-King for questions
+
 ## Features
 Connects to Interactive Brokers via TWS or IB Gateway using API
 Supports delayed data fallback if real-time quotes are unavailable
