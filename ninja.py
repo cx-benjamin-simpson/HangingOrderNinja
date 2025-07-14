@@ -29,23 +29,29 @@ for index, row in df.iterrows():
     ib.sleep(2)
 
     # Get market price
-    market_price = ticker.marketPrice()
+    current_ask = ticker.ask()
+
+
+# Calculate midprice
+# bid = ticker.bid
+# ask = ticker.ask
+# midprice = (bid + ask) / 2 if bid and ask else None
 
     # Fallback to CSV value if market price is unavailable
-    if market_price is None or pd.isna(market_price):
+    if current_ask is None or pd.isna(current_ask):
         if 'MarketPrice' in row and not pd.isna(row['MarketPrice']):
-            market_price = float(row['MarketPrice'])
-            print(f"[INFO] Using CSV price for {symbol}: {market_price}")
+            current_ask = float(row['MarketPrice'])
+            print(f"[INFO] Using CSV price for {symbol}: {current_ask}")
         else:
             print(f"[SKIP] No market price for {symbol} (possibly due to no delayed data)")
             continue
 
-    if market_price <= avg_buy_price:
-        print(f"[SKIP] {symbol}: Market price {market_price:.2f} <= Avg Buy Price {avg_buy_price:.2f}")
+    if current_ask <= avg_buy_price:
+        print(f"[SKIP] {symbol}: Market price {current_ask:.2f} <= Avg Buy Price {avg_buy_price:.2f}")
         continue
 
     # Calculate stop and limit price
-    stop_price = round(market_price * (1 - trailing_pct / 100), 2)
+    stop_price = round(current_ask * (1 - trailing_pct / 100), 2)
     limit_price = round(stop_price - limit_offset, 2)
 
     if limit_price <= avg_buy_price:
